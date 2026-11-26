@@ -1,0 +1,25 @@
+{
+  "name": "klasora",
+  "private": true,
+  "description": "Klasora — multi-tenant school management SaaS. Education, connected.",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:web": "npm run dev -w @klasora/web",
+    "dev:mobile": "npm run start -w @klasora/mobile",
+    "build:web": "npm run build -w @klasora/web",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "test:db": "npm run test -w @klasora/db-tests",
+    "db:push": "supabase db push",
+    "db:types": "supabase gen types typescript --linked > packages/shared/src/types/database.generated.ts"
+  },
+  "engines": {
+    "node": ">=20.19"
+  },
+  "devDependencies": {
+    "react": "19.3.0"
+  }
+}

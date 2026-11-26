@@ -1,0 +1,23 @@
+node_modules/
+dist/
+.expo/
+.vite/
+coverage/
+playwright-report/
+test-results/
+*.log
+.DS_Store
+
+# Environment — never commit real credentials
+.env
+.env.*
+!.env.example
+
+# Supabase local state
+supabase/.branches
+supabase/.temp
+
+# Mobile build output
+apps/mobile/ios/
+apps/mobile/android/
+apps/mobile/expo-env.d.ts
