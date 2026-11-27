@@ -119,7 +119,7 @@ async function savePassword() {
           <KAlert v-if="profileError" tone="danger" class="sm:col-span-2">{{ profileError }}</KAlert>
           <KInput v-model="profile.firstName" label="First name" autocomplete="given-name" :error="profileErrors.firstName" required />
           <KInput v-model="profile.lastName" label="Last name" autocomplete="family-name" :error="profileErrors.lastName" required />
-          <KInput :model-value="auth.user?.email ?? ''" label="Email" type="email" readonly hint="Contact support to change your sign-in email." />
+          <KInput :model-value="auth.user?.email ?? ''" label="Email" type="email" readonly hint="Contact support to change the email you sign in with." />
           <KInput v-model="profile.phone" label="Phone" type="tel" autocomplete="tel" :error="profileErrors.phone" optional />
         </form>
         <template #footer>

@@ -1,6 +1,6 @@
 /**
  * Client-side mirror of the rules enforced by `public.set_role_permissions`.
- * Used only to explain and disable controls — the database re-checks every
+ * Used only to explain and disable controls, the database re-checks every
  * change, so a tampered client still cannot escalate privileges.
  */
 import type { PermissionKey, Role } from '@klasora/shared';
@@ -26,7 +26,7 @@ export function roleEditability(role: Pick<Role, 'id' | 'role_key' | 'is_system_
     return { editable: false, reason: "You can view this role, but you don't have permission to change roles." };
   }
   if (role.is_system_role && !ctx.isOwner) {
-    return { editable: false, reason: 'Only the school owner can change the permissions of built-in roles.' };
+    return { editable: false, reason: 'Only the school owner can change the permissions of standard roles.' };
   }
   if (!ctx.isOwner && ctx.myRoleIds.has(role.id)) {
     return { editable: false, reason: "You can't change the permissions of a role that is assigned to you." };

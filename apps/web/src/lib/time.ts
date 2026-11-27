@@ -7,7 +7,7 @@ export function greetingFor(date: Date, timeZone?: string): string {
         new Intl.DateTimeFormat('en-GB', { hour: 'numeric', hourCycle: 'h23', timeZone }).format(date),
       );
     } catch {
-      /* unknown zone — fall back to the device clock */
+      /* unknown zone: fall back to the device clock */
     }
   }
   if (hour < 12) return 'Good morning';
@@ -16,6 +16,6 @@ export function greetingFor(date: Date, timeZone?: string): string {
 }
 
 export function formatDate(value: string | null | undefined): string {
-  if (!value) return '—';
+  if (!value) return 'Not set';
   return new Date(value).toLocaleDateString('en-NG', { day: 'numeric', month: 'short', year: 'numeric' });
 }

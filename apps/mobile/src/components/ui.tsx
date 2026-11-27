@@ -44,9 +44,14 @@ export function Card({ children }: { children: ReactNode }) {
         backgroundColor: c.surface,
         borderColor: c.line,
         borderWidth: StyleSheet.hairlineWidth,
-        borderRadius: radius.card,
+        borderRadius: radius.panel,
         padding: spacing(4),
         gap: spacing(3),
+        shadowColor: '#14243A',
+        shadowOpacity: 0.06,
+        shadowRadius: 12,
+        shadowOffset: { width: 0, height: 4 },
+        elevation: 2,
       }}
     >
       {children}
@@ -79,8 +84,8 @@ export function Button({
       disabled={isDisabled}
       onPress={onPress}
       style={({ pressed }) => ({
-        minHeight: 48,
-        borderRadius: radius.control,
+        minHeight: 50,
+        borderRadius: radius.control + 2,
         alignItems: 'center',
         justifyContent: 'center',
         paddingHorizontal: spacing(4),
@@ -88,6 +93,12 @@ export function Button({
         borderWidth: variant === 'secondary' ? 1 : 0,
         borderColor: c.lineStrong,
         opacity: isDisabled ? 0.6 : pressed ? 0.85 : 1,
+        transform: [{ scale: pressed && !isDisabled ? 0.98 : 1 }],
+        shadowColor: variant === 'primary' ? '#2563EB' : '#000000',
+        shadowOpacity: variant === 'primary' ? 0.35 : 0,
+        shadowRadius: 10,
+        shadowOffset: { width: 0, height: 4 },
+        elevation: variant === 'primary' ? 3 : 0,
       })}
     >
       {loading ? <ActivityIndicator color={color} /> : <Text style={{ color, fontSize: 15, fontWeight: '600' }}>{label}</Text>}

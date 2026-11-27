@@ -1,12 +1,23 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import type { Session } from '@supabase/supabase-js';
-import { toAppError, type MembershipWithContext, type PermissionKey, type Profile } from '@klasora/shared';
+import * as SecureStore from 'expo-secure-store';
+import {
+  toAppError,
+  type AcademicStructure,
+  type InstitutionType,
+  type MembershipWithContext,
+  type PermissionKey,
+  type Profile,
+} from '@klasora/shared';
 import { supabase } from '@/lib/supabase';
 
 export interface MobileSchool {
   id: string;
   name: string;
   slug: string;
+  logoUrl: string | null;
+  institutionType: InstitutionType;
+  academicStructure: AcademicStructure;
   roles: MembershipWithContext['role'][];
 }
 
@@ -24,13 +35,16 @@ interface AuthState {
   /** Returns to the school list (for people in several schools). */
   clearSchool: () => void;
   reload: () => Promise<void>;
+  /** True once the person has finished or skipped the walkthrough with this id. */
+  hasCompletedTour: (id: string) => boolean;
+  completeTour: (id: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthState | null>(null);
 
 const MEMBERSHIP_SELECT = `
   id, school_id, role_id, status,
-  school:schools ( id, name, slug ),
+  school:schools ( id, name, slug, logo_url, institution_type, academic_structure ),
   role:roles!school_memberships_role_fk ( id, name, role_key, is_system_role )
 `;
 
@@ -41,6 +55,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [schools, setSchools] = useState<MobileSchool[]>([]);
   const [currentSchoolId, setCurrentSchoolId] = useState<string | null>(null);
   const [permissions, setPermissions] = useState<Set<PermissionKey>>(new Set());
+  const [localTours, setLocalTours] = useState<string[]>([]);
+
+  // Finished walkthroughs are kept on the profile and mirrored in secure
+  // storage, so a failed network save never shows the walkthrough again.
+  const tourKey = (userId: string) => `klasora_tours_${userId.replace(/[^A-Za-z0-9]/g, '')}`;
+  const loadLocalTours = useCallback(async (userId: string) => {
+    try {
+      setLocalTours(JSON.parse((await SecureStore.getItemAsync(tourKey(userId))) ?? '[]') as string[]);
+    } catch {
+      setLocalTours([]);
+    }
+  }, []);
 
   const loadPermissions = useCallback(async (schoolId: string) => {
     const { data, error } = await supabase.rpc('get_my_permissions', { p_school_id: schoolId });
@@ -56,13 +82,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       ]);
       if (membershipRes.error) throw toAppError(membershipRes.error, { fallback: "We couldn't load your schools." });
       setProfile((profileRes.data as Profile | null) ?? null);
+      await loadLocalTours(userId);
 
       const bySchool = new Map<string, MobileSchool>();
       for (const m of (membershipRes.data ?? []) as unknown as MembershipWithContext[]) {
         if (!m.school || !m.role) continue;
         const existing = bySchool.get(m.school.id);
         if (existing) existing.roles.push(m.role);
-        else bySchool.set(m.school.id, { id: m.school.id, name: m.school.name, slug: m.school.slug, roles: [m.role] });
+        else
+          bySchool.set(m.school.id, {
+            id: m.school.id,
+            name: m.school.name,
+            slug: m.school.slug,
+            logoUrl: m.school.logo_url ?? null,
+            institutionType: m.school.institution_type,
+            academicStructure: m.school.academic_structure,
+            roles: [m.role],
+          });
       }
       const list = [...bySchool.values()].sort((a, b) => a.name.localeCompare(b.name));
       setSchools(list);
@@ -73,7 +109,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         await loadPermissions(only.id);
       }
     },
-    [loadPermissions],
+    [loadPermissions, loadLocalTours],
   );
 
   useEffect(() => {
@@ -131,8 +167,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       async reload() {
         if (session) await loadWorkspace(session.user.id);
       },
+      hasCompletedTour(id) {
+        return Boolean(profile?.completed_tours?.includes(id)) || localTours.includes(id);
+      },
+      async completeTour(id) {
+        const userId = session?.user.id;
+        if (!userId) return;
+        const tours = [...new Set([...(profile?.completed_tours ?? []), ...localTours, id])];
+        setLocalTours(tours);
+        await SecureStore.setItemAsync(tourKey(userId), JSON.stringify(tours)).catch(() => undefined);
+        const { data } = await supabase.from('profiles').update({ completed_tours: tours }).eq('id', userId).select('*').maybeSingle();
+        if (data) setProfile(data as Profile);
+      },
     }),
-    [ready, session, profile, schools, currentSchoolId, permissions, loadWorkspace, loadPermissions],
+    [ready, session, profile, schools, currentSchoolId, permissions, localTours, loadWorkspace, loadPermissions],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

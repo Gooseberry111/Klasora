@@ -33,6 +33,11 @@ export const PERMISSION_MODULES = {
     description: 'Student records, admissions and guardians.',
     actions: ['view', 'create', 'edit', 'delete', 'export'],
   },
+  student_health: {
+    label: 'Student health and welfare',
+    description: 'Medical, accessibility and emergency contact details.',
+    actions: ['view', 'edit'],
+  },
   staff: {
     label: 'Staff',
     description: 'Teachers, staff members, invitations and memberships.',
@@ -84,7 +89,7 @@ export const PERMISSION_MODULES = {
     actions: ['view', 'create', 'edit', 'delete'],
   },
   billing: {
-    label: 'Subscription & billing',
+    label: 'Subscription and billing',
     description: 'Klasora subscription plan and payments.',
     actions: ['view', 'edit'],
   },
@@ -154,6 +159,7 @@ export const SYSTEM_ROLE_LABELS: Record<SystemRoleKey, string> = {
 export const SYSTEM_ROLE_DEFAULT_PERMISSIONS: Record<Exclude<SystemRoleKey, 'owner'>, PermissionKey[]> = {
   school_admin: [
     'students.view', 'students.create', 'students.edit', 'students.delete', 'students.export',
+    'student_health.view', 'student_health.edit',
     'staff.view', 'staff.create', 'staff.edit', 'staff.delete', 'staff.export',
     'academics.view', 'academics.create', 'academics.edit', 'academics.delete',
     'attendance.view', 'attendance.create', 'attendance.edit', 'attendance.export',
@@ -168,6 +174,7 @@ export const SYSTEM_ROLE_DEFAULT_PERMISSIONS: Record<Exclude<SystemRoleKey, 'own
   ],
   principal: [
     'students.view', 'students.export',
+    'student_health.view',
     'staff.view',
     'academics.view',
     'attendance.view', 'attendance.export',

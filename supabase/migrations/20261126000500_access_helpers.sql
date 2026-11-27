@@ -3,7 +3,7 @@
 --
 -- Every RLS policy and RPC builds on these functions, so they are small,
 -- SECURITY DEFINER (they must read membership tables the caller cannot see in
--- full), pinned to an empty search_path, and always keyed on auth.uid() — never
+-- full), pinned to an empty search_path, and always keyed on auth.uid(), never
 -- on a user id supplied by the client.
 --
 -- Read vs write: reads only require an active membership, so members of a

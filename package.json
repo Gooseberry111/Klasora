@@ -1,7 +1,7 @@
 {
   "name": "klasora",
   "private": true,
-  "description": "Klasora — multi-tenant school management SaaS. Education, connected.",
+  "description": "Klasora: multi-tenant school management SaaS. Education, connected.",
   "workspaces": [
     "apps/*",
     "packages/*"
@@ -13,7 +13,7 @@
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
     "test:db": "npm run test -w @klasora/db-tests",
-    "db:push": "supabase db push",
+    "db:push": "supabase db push --remote",
     "db:types": "supabase gen types typescript --linked > packages/shared/src/types/database.generated.ts"
   },
   "engines": {

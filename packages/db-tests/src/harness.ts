@@ -1,7 +1,7 @@
 /**
  * Test harness: boots an embedded Postgres (PGlite), applies the Supabase shim
  * and every migration in `supabase/migrations` in order, and lets tests run SQL
- * as a specific signed-in user — exactly as PostgREST would, with RLS active.
+ * as a specific signed-in user, exactly as PostgREST would, with RLS active.
  */
 import { PGlite, type Transaction } from '@electric-sql/pglite';
 import { readFileSync, readdirSync } from 'node:fs';
@@ -27,7 +27,7 @@ export class TestDatabase {
 
   constructor(readonly pg: PGlite) {}
 
-  /** Runs SQL as the database owner (bypasses RLS) — for fixtures and assertions only. */
+  /** Runs SQL as the database owner (bypasses RLS), for fixtures and assertions only. */
   async admin<T = Record<string, unknown>>(sql: string, params: unknown[] = []): Promise<T[]> {
     const result = await this.pg.query<T>(sql, params);
     return result.rows;

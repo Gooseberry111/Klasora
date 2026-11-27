@@ -23,7 +23,7 @@ as $$
 $$;
 
 -- -----------------------------------------------------------------------------
--- register_school — creates a tenant: school, main campus, built-in roles,
+-- register_school: creates a tenant: school, main campus, built-in roles,
 -- owner membership and a trial subscription, atomically.
 -- -----------------------------------------------------------------------------
 create or replace function public.register_school(
@@ -141,7 +141,7 @@ end;
 $$;
 
 -- -----------------------------------------------------------------------------
--- set_role_permissions — replaces a role's permission set.
+-- set_role_permissions: replaces a role's permission set.
 -- -----------------------------------------------------------------------------
 create or replace function public.set_role_permissions(p_role_id uuid, p_permission_keys text[])
 returns void
@@ -413,7 +413,7 @@ end;
 $$;
 
 -- -----------------------------------------------------------------------------
--- update_membership — change someone's role and/or status.
+-- update_membership: change someone's role and/or status.
 -- -----------------------------------------------------------------------------
 create or replace function public.update_membership(
   p_membership_id uuid,

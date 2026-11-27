@@ -34,7 +34,7 @@ const AUTH_MESSAGES: Record<string, string> = {
   otp_expired: 'This link has expired. Please request a new one.',
   session_not_found: 'Your session has ended. Please sign in again.',
   refresh_token_not_found: 'Your session has ended. Please sign in again.',
-  signup_disabled: 'New sign-ups are currently disabled.',
+  signup_disabled: 'New registrations are paused right now. Please try again later.',
   reauthentication_needed: 'For your security, please sign in again before changing your password.',
 };
 

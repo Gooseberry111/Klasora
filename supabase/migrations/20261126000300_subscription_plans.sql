@@ -61,7 +61,7 @@ create trigger school_subscriptions_prevent_school_change
   for each row execute function app.prevent_school_change();
 
 -- -----------------------------------------------------------------------------
--- Initial plans. These are configurable starting points, not fixed values —
+-- Initial plans. These are configurable starting points, not fixed values;
 -- platform finance administrators edit them from the platform dashboard.
 -- -----------------------------------------------------------------------------
 insert into public.subscription_plans

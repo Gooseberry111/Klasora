@@ -86,7 +86,7 @@ export async function deleteRole(roleId: string): Promise<void> {
     });
   }
   if (count === 0) {
-    throw toAppError(null, { fallback: "This role couldn't be deleted. Built-in roles can't be removed." });
+    throw toAppError(null, { fallback: "This role couldn't be deleted. Standard roles can't be removed." });
   }
 }
 

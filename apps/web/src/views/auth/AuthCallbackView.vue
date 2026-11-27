@@ -2,7 +2,7 @@
 /**
  * Landing page for links in auth emails (sign-up confirmation). The Supabase
  * client exchanges the code in the URL for a session; we then continue to the
- * right place — finishing a pending school registration if there is one.
+ * right place: finishing a pending school registration if there is one.
  */
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -45,7 +45,7 @@ onMounted(async () => {
       <h1 class="k-page-title">We couldn't confirm this link</h1>
       <p class="mt-2 text-[14.5px] text-ink-muted">
         {{ description || 'The link may have expired or already been used.' }} Sign in to continue, or request a new
-        verification email from the sign-in page.
+        verification email from the Sign in page.
       </p>
       <KButton class="mt-7" :to="{ name: 'login' }">Go to sign in</KButton>
     </template>

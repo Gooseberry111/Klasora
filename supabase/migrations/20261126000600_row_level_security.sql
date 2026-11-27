@@ -46,7 +46,7 @@ create policy profiles_update_own on public.profiles
   with check (id = (select auth.uid()));
 
 -- -----------------------------------------------------------------------------
--- schools — created only via register_school(); status changed only by platform RPC.
+-- schools: created only via register_school(); status changed only by platform RPC.
 -- -----------------------------------------------------------------------------
 revoke insert, update, delete on public.schools from authenticated;
 grant select on public.schools to authenticated;
@@ -89,7 +89,7 @@ create policy campuses_delete on public.campuses
   using (app.can_write(school_id, 'settings.edit') and not is_main);
 
 -- -----------------------------------------------------------------------------
--- permissions — the catalogue is readable by any signed-in user.
+-- permissions: the catalogue is readable by any signed-in user.
 -- -----------------------------------------------------------------------------
 revoke insert, update, delete on public.permissions from authenticated;
 grant select on public.permissions to authenticated;
@@ -99,7 +99,7 @@ create policy permissions_select on public.permissions
   using (true);
 
 -- -----------------------------------------------------------------------------
--- roles — members see their school's roles; custom roles are managed directly,
+-- roles: members see their school's roles; custom roles are managed directly,
 -- built-in roles cannot be renamed or deleted.
 -- -----------------------------------------------------------------------------
 revoke all on public.roles from authenticated;
@@ -125,7 +125,7 @@ create policy roles_delete on public.roles
   using (app.can_write(school_id, 'roles.delete') and not is_system_role);
 
 -- -----------------------------------------------------------------------------
--- role_permissions — read-only for members; changed via set_role_permissions().
+-- role_permissions: read-only for members; changed via set_role_permissions().
 -- -----------------------------------------------------------------------------
 revoke all on public.role_permissions from authenticated;
 grant select on public.role_permissions to authenticated;
@@ -135,7 +135,7 @@ create policy role_permissions_select on public.role_permissions
   using (app.is_school_member(school_id));
 
 -- -----------------------------------------------------------------------------
--- school_memberships — your own, or the school's if you may view staff/roles.
+-- school_memberships: your own, or the school's if you may view staff/roles.
 -- Changed only via accept_invitation() / update_membership().
 -- -----------------------------------------------------------------------------
 revoke all on public.school_memberships from authenticated;
@@ -150,7 +150,7 @@ create policy school_memberships_select on public.school_memberships
   );
 
 -- -----------------------------------------------------------------------------
--- invitations — staff viewers can list them; the token hash is never readable.
+-- invitations: staff viewers can list them; the token hash is never readable.
 -- -----------------------------------------------------------------------------
 revoke all on public.invitations from authenticated;
 grant select (id, school_id, email, role_id, campus_id, status, invited_by, expires_at,
@@ -162,7 +162,7 @@ create policy invitations_select on public.invitations
   using (app.has_permission(school_id, 'staff.view'));
 
 -- -----------------------------------------------------------------------------
--- platform_admins — see yourself; super admins see all. Managed server-side.
+-- platform_admins: see yourself; super admins see all. Managed server-side.
 -- -----------------------------------------------------------------------------
 revoke all on public.platform_admins from authenticated;
 grant select on public.platform_admins to authenticated;
@@ -175,7 +175,7 @@ create policy platform_admins_select on public.platform_admins
   );
 
 -- -----------------------------------------------------------------------------
--- audit_logs — append-only, written exclusively by triggers.
+-- audit_logs: append-only, written exclusively by triggers.
 -- -----------------------------------------------------------------------------
 revoke all on public.audit_logs from authenticated;
 grant select on public.audit_logs to authenticated;
@@ -188,7 +188,7 @@ create policy audit_logs_select on public.audit_logs
   );
 
 -- -----------------------------------------------------------------------------
--- subscription_plans — active plans are public (pricing page); platform
+-- subscription_plans: active plans are public (pricing page); platform
 -- finance/super admins manage them. Plans are deactivated, never deleted.
 -- -----------------------------------------------------------------------------
 revoke all on public.subscription_plans from authenticated;
@@ -209,7 +209,7 @@ create policy subscription_plans_update on public.subscription_plans
   with check (app.is_platform_admin(array['super_admin', 'finance_admin']::public.platform_role[]));
 
 -- -----------------------------------------------------------------------------
--- school_subscriptions — visible to billing viewers and platform admins.
+-- school_subscriptions: visible to billing viewers and platform admins.
 -- Written only by server-side code (registration RPC now, Paystack webhooks later).
 -- -----------------------------------------------------------------------------
 revoke all on public.school_subscriptions from authenticated;
@@ -220,7 +220,7 @@ create policy school_subscriptions_select on public.school_subscriptions
   using (app.has_permission(school_id, 'billing.view') or app.is_platform_admin());
 
 -- -----------------------------------------------------------------------------
--- Role templates — internal only (RLS on, no policies, no grants).
+-- Role templates: internal only (RLS on, no policies, no grants).
 -- -----------------------------------------------------------------------------
 revoke all on public.system_role_templates from authenticated;
 revoke all on public.system_role_template_permissions from authenticated;

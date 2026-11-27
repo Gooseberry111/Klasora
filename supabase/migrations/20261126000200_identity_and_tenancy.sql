@@ -9,7 +9,7 @@
 -- =============================================================================
 
 -- -----------------------------------------------------------------------------
--- profiles — one per auth user. `id` deliberately equals `auth.users.id` so RLS
+-- profiles: one per auth user. `id` deliberately equals `auth.users.id` so RLS
 -- can compare `user_id = auth.uid()` without an extra lookup (see docs/architecture.md).
 -- -----------------------------------------------------------------------------
 create table public.profiles (
@@ -79,7 +79,7 @@ create trigger on_auth_user_email_changed
   for each row execute function app.sync_auth_user_email();
 
 -- -----------------------------------------------------------------------------
--- schools — the tenant root.
+-- schools: the tenant root.
 -- -----------------------------------------------------------------------------
 create table public.schools (
   id                  uuid primary key default gen_random_uuid(),
@@ -139,7 +139,7 @@ create trigger campuses_prevent_school_change
   for each row execute function app.prevent_school_change();
 
 -- -----------------------------------------------------------------------------
--- permissions — global catalogue (seeded in 0400).
+-- permissions: global catalogue (seeded in 0400).
 -- -----------------------------------------------------------------------------
 create table public.permissions (
   id             uuid primary key default gen_random_uuid(),
@@ -153,7 +153,7 @@ create table public.permissions (
 );
 
 -- -----------------------------------------------------------------------------
--- roles — per school. Built-in roles carry a `role_key`; custom roles do not.
+-- roles: per school. Built-in roles carry a `role_key`; custom roles do not.
 -- -----------------------------------------------------------------------------
 create table public.roles (
   id             uuid primary key default gen_random_uuid(),
@@ -179,7 +179,7 @@ create trigger roles_prevent_school_change
   for each row execute function app.prevent_school_change();
 
 -- -----------------------------------------------------------------------------
--- role_permissions — deny by default: a permission is granted only if a row
+-- role_permissions: deny by default: a permission is granted only if a row
 -- exists with allowed = true.
 -- -----------------------------------------------------------------------------
 create table public.role_permissions (
@@ -201,7 +201,7 @@ create trigger role_permissions_prevent_school_change
   for each row execute function app.prevent_school_change();
 
 -- -----------------------------------------------------------------------------
--- school_memberships — a user's role in a school. One row per (school, user,
+-- school_memberships: a user's role in a school. One row per (school, user,
 -- role), so one person can be a teacher and a parent in the same school, and
 -- hold different roles in other schools.
 -- -----------------------------------------------------------------------------
@@ -236,7 +236,7 @@ create trigger school_memberships_prevent_school_change
   for each row execute function app.prevent_school_change();
 
 -- -----------------------------------------------------------------------------
--- invitations — only a SHA-256 hash of the token is stored; the raw token is
+-- invitations: only a SHA-256 hash of the token is stored; the raw token is
 -- returned once to the inviter (and later emailed by an Edge Function).
 -- -----------------------------------------------------------------------------
 create table public.invitations (
@@ -273,7 +273,7 @@ create trigger invitations_prevent_school_change
   for each row execute function app.prevent_school_change();
 
 -- -----------------------------------------------------------------------------
--- platform_admins — Klasora operators. Deliberately separate from school
+-- platform_admins: Klasora operators. Deliberately separate from school
 -- memberships: being a platform admin grants NO access to school records.
 -- -----------------------------------------------------------------------------
 create table public.platform_admins (
@@ -292,7 +292,7 @@ create trigger platform_admins_set_updated_at
   for each row execute function app.set_updated_at();
 
 -- -----------------------------------------------------------------------------
--- audit_logs — append-only. `school_id` intentionally has no foreign key so the
+-- audit_logs: append-only. `school_id` intentionally has no foreign key so the
 -- history outlives the records it describes.
 -- -----------------------------------------------------------------------------
 create table public.audit_logs (

@@ -1,6 +1,6 @@
 import { useColorScheme } from 'react-native';
 
-/** Klasora mobile design tokens — the same palette as the web app, tuned for native. */
+/** Klasora mobile design tokens, the same palette as the web app, tuned for native. */
 const light = {
   canvas: '#F7F9FC',
   surface: '#FFFFFF',

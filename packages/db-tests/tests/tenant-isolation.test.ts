@@ -97,7 +97,8 @@ describe('writes are confined to your own school', () => {
 
   it('cannot move a record into another school, even with access to both', async () => {
     const both = await db.createUser();
-    const s1 = await db.registerSchool(both.id, { name: 'Twin One' });
+    // Growth allows a second campus (Starter is limited to one).
+    const s1 = await db.registerSchool(both.id, { name: 'Twin One', planCode: 'growth' });
     const s2 = await db.registerSchool(both.id, { name: 'Twin Two' });
     const [campus] = await db.rows<{ id: string }>(
       both.id,

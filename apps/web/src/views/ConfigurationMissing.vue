@@ -19,7 +19,7 @@ import KLogo from '@/components/ui/KLogo.vue';
         <li>Fill in <code class="rounded bg-surface-muted px-1.5 py-0.5 text-[12.5px]">VITE_SUPABASE_URL</code> and <code class="rounded bg-surface-muted px-1.5 py-0.5 text-[12.5px]">VITE_SUPABASE_ANON_KEY</code>.</li>
         <li>Restart <code class="rounded bg-surface-muted px-1.5 py-0.5 text-[12.5px]">npm run dev:web</code>.</li>
       </ol>
-      <p class="mt-5 text-[12.5px] text-ink-muted">Never use the service-role key in the web app.</p>
+      <p class="mt-5 text-[12.5px] text-ink-muted">Never use the service role key in the web app.</p>
     </div>
   </div>
 </template>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /**
- * Klasora mark: an open book whose pages are joined by a connected network —
+ * Klasora mark: an open book whose pages are joined by a connected network:
  * education, connected. The mark stands alone as the app icon.
  */
 withDefaults(defineProps<{ size?: number; wordmark?: boolean; inverted?: boolean }>(), {

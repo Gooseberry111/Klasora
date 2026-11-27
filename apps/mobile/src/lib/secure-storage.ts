@@ -26,7 +26,7 @@ export const secureSessionStorage = {
     const count = Number(await SecureStore.getItemAsync(`${base}.n`));
     if (!count) return null;
     const parts = await Promise.all(Array.from({ length: count }, (_, i) => SecureStore.getItemAsync(`${base}.${i}`)));
-    // A missing chunk means the stored session is incomplete — treat it as signed out.
+    // A missing chunk means the stored session is incomplete, treat it as signed out.
     if (parts.some((p) => p === null)) return null;
     return parts.join('');
   },

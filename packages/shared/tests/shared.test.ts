@@ -43,7 +43,7 @@ describe('permission catalogue', () => {
   it('returns null for actions a module does not support', () => {
     expect(permissionKey('reports', 'delete')).toBeNull();
     expect(permissionKey('finance', 'approve')).toBe('finance.approve');
-    expect(Object.keys(PERMISSION_MODULES)).toHaveLength(13);
+    expect(Object.keys(PERMISSION_MODULES)).toHaveLength(14);
   });
 });
 

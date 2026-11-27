@@ -11,7 +11,7 @@ const model = defineModel<string>({ default: '' });
 const props = withDefaults(
   defineProps<{
     label?: string;
-    type?: 'text' | 'email' | 'password' | 'tel' | 'url' | 'search' | 'date';
+    type?: 'text' | 'email' | 'password' | 'tel' | 'url' | 'search' | 'date' | 'time' | 'number';
     placeholder?: string;
     hint?: string;
     error?: string;
@@ -20,7 +20,7 @@ const props = withDefaults(
     disabled?: boolean;
     readonly?: boolean;
     autocomplete?: string;
-    inputmode?: 'text' | 'email' | 'tel' | 'url' | 'numeric' | 'search';
+    inputmode?: 'text' | 'email' | 'tel' | 'url' | 'numeric' | 'decimal' | 'search';
     maxlength?: number;
     icon?: Component;
     id?: string;

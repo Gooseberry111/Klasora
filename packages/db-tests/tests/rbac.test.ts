@@ -207,7 +207,7 @@ describe('privilege escalation is blocked', () => {
       db.rows(admin.id, `select public.set_role_permissions($1, array['billing.edit'])`, [adminRole]),
       'KL403',
     );
-    expect(message).toMatch(/built-in roles|assigned to you/);
+    expect(message).toMatch(/standard roles|assigned to you/);
   });
 
   it('cannot grant a custom role permissions they do not hold', async () => {

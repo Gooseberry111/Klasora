@@ -1,5 +1,5 @@
 /**
- * Row types for Klasora's Phase 1 tables, exactly as PostgREST returns them
+ * Row types for Klasora's tables, exactly as PostgREST returns them
  * (snake_case, timestamps as ISO strings, bigint money as number).
  *
  * Once a Supabase project is linked, `npm run db:types` generates
@@ -18,6 +18,7 @@ import type {
   ThemePreference,
 } from '../constants';
 import type { PermissionAction, SystemRoleKey } from '../permissions';
+import type { DepartmentKind } from '../vocabulary';
 
 type Uuid = string;
 type Timestamp = string;
@@ -33,6 +34,8 @@ export interface Profile {
   preferred_language: string;
   timezone: string;
   theme: ThemePreference;
+  /** Product tours this person has finished, such as 'web_welcome_v1'. */
+  completed_tours: string[];
   created_at: Timestamp;
   updated_at: Timestamp;
 }
@@ -55,6 +58,8 @@ export interface School {
   timezone: string;
   default_currency: string;
   status: SchoolStatus;
+  motto: string | null;
+  setup_completed_at: Timestamp | null;
   created_by: Uuid | null;
   created_at: Timestamp;
   updated_at: Timestamp;
@@ -203,7 +208,7 @@ export interface SchoolSubscription {
 
 /** A membership joined with its school and role, as loaded for the workspace switcher. */
 export interface MembershipWithContext extends SchoolMembership {
-  school: Pick<School, 'id' | 'name' | 'slug' | 'logo_url' | 'status' | 'institution_type'>;
+  school: Pick<School, 'id' | 'name' | 'slug' | 'logo_url' | 'status' | 'institution_type' | 'academic_structure'>;
   role: Pick<Role, 'id' | 'name' | 'role_key' | 'is_system_role'>;
 }
 
@@ -220,4 +225,105 @@ export interface InvitationPreview {
 export interface CreatedInvitation {
   invitation_id: Uuid;
   token: string;
+}
+
+// -----------------------------------------------------------------------------
+// Phase 2: school setup
+// -----------------------------------------------------------------------------
+
+export type AcademicPeriodStatus = 'planned' | 'active' | 'completed';
+
+export interface AcademicYear {
+  id: Uuid;
+  school_id: Uuid;
+  name: string;
+  /** ISO date (YYYY MM DD). */
+  start_date: string;
+  end_date: string;
+  status: AcademicPeriodStatus;
+  is_current: boolean;
+  created_at: Timestamp;
+  updated_at: Timestamp;
+}
+
+export interface AcademicTerm {
+  id: Uuid;
+  school_id: Uuid;
+  academic_year_id: Uuid;
+  name: string;
+  sequence: number;
+  start_date: string;
+  end_date: string;
+  status: AcademicPeriodStatus;
+  is_current: boolean;
+  created_at: Timestamp;
+  updated_at: Timestamp;
+}
+
+export interface Department {
+  id: Uuid;
+  school_id: Uuid;
+  campus_id: Uuid | null;
+  parent_id: Uuid | null;
+  kind: DepartmentKind;
+  name: string;
+  code: string | null;
+  description: string | null;
+  status: RecordStatus;
+  created_at: Timestamp;
+  updated_at: Timestamp;
+}
+
+export interface SchoolClass {
+  id: Uuid;
+  school_id: Uuid;
+  campus_id: Uuid;
+  department_id: Uuid | null;
+  academic_year_id: Uuid | null;
+  name: string;
+  level: string | null;
+  level_order: number;
+  class_teacher_membership_id: Uuid | null;
+  capacity: number | null;
+  status: RecordStatus;
+  created_at: Timestamp;
+  updated_at: Timestamp;
+}
+
+export interface Subject {
+  id: Uuid;
+  school_id: Uuid;
+  department_id: Uuid | null;
+  name: string;
+  code: string;
+  description: string | null;
+  status: RecordStatus;
+  created_at: Timestamp;
+  updated_at: Timestamp;
+}
+
+export interface ClassSubject {
+  id: Uuid;
+  school_id: Uuid;
+  class_id: Uuid;
+  subject_id: Uuid;
+  teacher_membership_id: Uuid | null;
+  created_at: Timestamp;
+  updated_at: Timestamp;
+}
+
+/** Row returned by `public.list_school_members`. */
+export interface SchoolMember {
+  membership_id: Uuid;
+  user_id: Uuid;
+  first_name: string;
+  last_name: string;
+  email: string;
+  avatar_url: string | null;
+  role_id: Uuid;
+  role_name: string;
+  role_key: SystemRoleKey | null;
+  campus_id: Uuid | null;
+  status: MembershipStatus;
+  joined_at: Timestamp | null;
 }

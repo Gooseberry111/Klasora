@@ -17,3 +17,8 @@ export async function updateProfile(userId: string, input: Partial<ProfileUpdate
   const response = await supabase.from('profiles').update(patch).eq('id', userId).select('*').single();
   return unwrap(response, { fallback: "We couldn't save your profile. Please try again." }) as Profile;
 }
+
+export async function saveCompletedTours(userId: string, tours: string[]): Promise<Profile> {
+  const response = await supabase.from('profiles').update({ completed_tours: tours }).eq('id', userId).select('*').single();
+  return unwrap(response, { fallback: "We couldn't save your progress." }) as Profile;
+}

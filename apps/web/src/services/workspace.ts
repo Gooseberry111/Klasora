@@ -11,7 +11,7 @@ import { toAppError, unwrap } from '@/lib/errors';
 
 const MEMBERSHIP_SELECT = `
   id, school_id, user_id, role_id, campus_id, status, invited_by, joined_at, created_at, updated_at,
-  school:schools ( id, name, slug, logo_url, status, institution_type ),
+  school:schools ( id, name, slug, logo_url, status, institution_type, academic_structure ),
   role:roles!school_memberships_role_fk ( id, name, role_key, is_system_role )
 `;
 
@@ -24,7 +24,7 @@ export async function fetchMyMemberships(userId: string): Promise<MembershipWith
     .eq('status', 'active')
     .order('created_at', { ascending: true });
   const rows = unwrap(response, { fallback: "We couldn't load your schools. Please try again." });
-  // A membership whose school is hidden (e.g. archived) comes back with school = null.
+  // A membership whose school is hidden (for example, archived) comes back with school = null.
   return (rows as unknown as MembershipWithContext[]).filter((m) => m.school && m.role);
 }
 
@@ -50,7 +50,7 @@ export interface SchoolOverview {
 }
 
 /**
- * Real figures for the Phase 1 dashboard. Each query is permission-aware:
+ * Real figures for the dashboard. Each query is permission-aware:
  * RLS returns nothing the caller may not see, and we skip queries the caller
  * is known not to have access to.
  */

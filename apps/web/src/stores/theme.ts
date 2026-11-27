@@ -9,7 +9,7 @@ function readStored(): ThemePreference {
     const value = localStorage.getItem(STORAGE_KEY);
     if (value === 'light' || value === 'dark' || value === 'system') return value;
   } catch {
-    /* storage unavailable (private mode) — fall through */
+    /* storage unavailable (private mode), fall through */
   }
   return 'light';
 }

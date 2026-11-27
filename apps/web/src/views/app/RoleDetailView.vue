@@ -233,7 +233,7 @@ async function remove() {
         ]"
       >
         <template #badge>
-          <KBadge :tone="role.is_system_role ? 'brand' : 'neutral'">{{ role.is_system_role ? 'Built-in' : 'Custom' }}</KBadge>
+          <KBadge :tone="role.is_system_role ? 'brand' : 'neutral'">{{ role.is_system_role ? 'Standard' : 'Custom' }}</KBadge>
         </template>
         <template #actions>
           <KButton v-if="canRename" variant="secondary" :icon="Pencil" @click="openEdit">Rename</KButton>
@@ -270,7 +270,7 @@ async function remove() {
           You can grant or remove only permissions you hold yourself. Others are shown for reference.
         </KAlert>
         <KAlert v-if="role.role_key === 'parent' || role.role_key === 'student'" tone="info" class="mb-5">
-          Parents and students don't need school-wide permissions: they automatically see only their own or their linked
+          Parents and students don't need permissions across the whole school: they automatically see only their own or their linked
           children's records.
         </KAlert>
 
@@ -306,7 +306,7 @@ async function remove() {
                       @update:model-value="(v) => toggle(permissionKey(module, action)!, v)"
                     />
                   </template>
-                  <span v-else class="text-ink-subtle" aria-label="Not applicable">—</span>
+                  <span v-else class="text-ink-subtle" aria-label="Not applicable">·</span>
                 </td>
               </tr>
             </tbody>

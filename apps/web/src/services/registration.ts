@@ -46,5 +46,5 @@ export function readPendingRegistration(metadata: Record<string, unknown> | unde
 
 export async function clearPendingRegistration(): Promise<void> {
   const { error } = await supabase.auth.updateUser({ data: { pending_school: null } });
-  if (error) throw toAppError(error, { fallback: "Your school was created, but we couldn't tidy up your sign-up details." });
+  if (error) throw toAppError(error, { fallback: "Your school was created, but we couldn't tidy up your registration details." });
 }

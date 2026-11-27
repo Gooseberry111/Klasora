@@ -119,3 +119,25 @@ export const NIGERIAN_STATES = [
   'Kaduna', 'Kano', 'Katsina', 'Kebbi', 'Kogi', 'Kwara', 'Lagos', 'Nasarawa', 'Niger', 'Ogun', 'Ondo',
   'Osun', 'Oyo', 'Plateau', 'Rivers', 'Sokoto', 'Taraba', 'Yobe', 'Zamfara',
 ] as const;
+
+export const ACADEMIC_PERIOD_STATUS_LABELS = {
+  planned: 'Planned',
+  active: 'In progress',
+  completed: 'Completed',
+} as const;
+
+export const MEMBERSHIP_STATUS_LABELS: Record<MembershipStatus, string> = {
+  active: 'Active',
+  inactive: 'Inactive',
+  suspended: 'Suspended',
+};
+
+/** Time zones offered in the school profile. */
+export const TIMEZONES = [
+  'Africa/Lagos',
+  'Africa/Accra',
+  'Africa/Nairobi',
+  'Africa/Johannesburg',
+  'Europe/London',
+  'America/New_York',
+] as const;

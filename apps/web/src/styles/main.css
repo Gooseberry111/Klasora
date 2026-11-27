@@ -7,7 +7,7 @@
 /*
  * Klasora design tokens.
  * Raw palette values live in :root / .dark; Tailwind utilities reference them
- * through semantic names (bg-canvas, text-ink, border-line …), so every
+ * through semantic names (bg-canvas, text-ink, border-line), so every
  * component gets a deliberately designed dark theme without per-class overrides.
  */
 :root {
@@ -46,8 +46,19 @@
   --k-info-soft: #ecfeff;
   --k-info-ink: #0e7490;
 
-  --k-shadow-card: 0 1px 2px rgb(16 24 40 / 0.04), 0 1px 3px rgb(16 24 40 / 0.06);
+  --k-shadow-card: 0 1px 2px rgb(16 24 40 / 0.04), 0 2px 6px -1px rgb(16 24 40 / 0.05);
+  --k-shadow-hover: 0 2px 4px rgb(16 24 40 / 0.04), 0 12px 28px -8px rgb(20 36 58 / 0.16);
   --k-shadow-pop: 0 12px 32px -8px rgb(16 24 40 / 0.18), 0 4px 8px -4px rgb(16 24 40 / 0.08);
+  --k-shadow-brand: 0 1px 2px rgb(29 78 216 / 0.3), 0 6px 16px -4px rgb(37 99 235 / 0.45);
+
+  /* Signature surfaces */
+  --k-gradient-brand: linear-gradient(135deg, #3b82f6 0%, #2563eb 45%, #1d4ed8 100%);
+  --k-gradient-hero: radial-gradient(120% 140% at 100% 0%, rgb(59 130 246 / 0.55) 0%, transparent 55%),
+    radial-gradient(90% 120% at 0% 100%, rgb(8 145 178 / 0.35) 0%, transparent 60%),
+    linear-gradient(135deg, #14243a 0%, #10203a 55%, #0c1a30 100%);
+  --k-gradient-sidebar: linear-gradient(180deg, #13233b 0%, #101d32 60%, #0d182a 100%);
+  --k-canvas-glow: radial-gradient(60% 50% at 70% 0%, rgb(37 99 235 / 0.07) 0%, transparent 70%);
+  --k-dot: rgb(20 36 58 / 0.07);
 
   color-scheme: light;
 }
@@ -88,8 +99,18 @@
   --k-info-soft: rgb(6 182 212 / 0.12);
   --k-info-ink: #67e8f9;
 
-  --k-shadow-card: 0 1px 2px rgb(0 0 0 / 0.3);
+  --k-shadow-card: 0 1px 2px rgb(0 0 0 / 0.3), inset 0 1px 0 rgb(255 255 255 / 0.03);
+  --k-shadow-hover: 0 14px 32px -10px rgb(0 0 0 / 0.6), inset 0 1px 0 rgb(255 255 255 / 0.04);
   --k-shadow-pop: 0 16px 40px -8px rgb(0 0 0 / 0.55);
+  --k-shadow-brand: 0 1px 2px rgb(0 0 0 / 0.4), 0 8px 20px -6px rgb(59 130 246 / 0.5);
+
+  --k-gradient-brand: linear-gradient(135deg, #60a5fa 0%, #3b82f6 45%, #2563eb 100%);
+  --k-gradient-hero: radial-gradient(120% 140% at 100% 0%, rgb(59 130 246 / 0.45) 0%, transparent 55%),
+    radial-gradient(90% 120% at 0% 100%, rgb(6 182 212 / 0.25) 0%, transparent 60%),
+    linear-gradient(135deg, #12223a 0%, #0f1c31 55%, #0b1628 100%);
+  --k-gradient-sidebar: linear-gradient(180deg, #0f1b2e 0%, #0c1626 60%, #0a1220 100%);
+  --k-canvas-glow: radial-gradient(60% 50% at 70% 0%, rgb(59 130 246 / 0.09) 0%, transparent 70%);
+  --k-dot: rgb(255 255 255 / 0.05);
 
   color-scheme: dark;
 }
@@ -133,7 +154,9 @@
   --color-info-ink: var(--k-info-ink);
 
   --shadow-card: var(--k-shadow-card);
+  --shadow-hover: var(--k-shadow-hover);
   --shadow-pop: var(--k-shadow-pop);
+  --shadow-brand: var(--k-shadow-brand);
 
   --radius-control: 8px;
   --radius-card: 12px;
@@ -149,6 +172,9 @@
 
   body {
     @apply bg-canvas text-ink font-sans text-[14px] leading-relaxed;
+    background-image: var(--k-canvas-glow);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     font-feature-settings: 'cv11', 'ss01';
   }
 
@@ -179,6 +205,82 @@
   .k-help {
     @apply text-[12.5px] text-ink-muted;
   }
+  .k-eyebrow {
+    @apply text-[11.5px] font-semibold tracking-[0.1em] text-brand-ink uppercase;
+  }
+
+  /* Signature surfaces */
+  .k-bg-brand {
+    background-image: var(--k-gradient-brand);
+  }
+  .k-bg-hero {
+    background-image: var(--k-gradient-hero);
+  }
+  .k-bg-sidebar {
+    background-image: var(--k-gradient-sidebar);
+  }
+  .k-canvas {
+    background-color: var(--k-canvas);
+    background-image: var(--k-canvas-glow);
+    background-repeat: no-repeat;
+  }
+  /* Fine dotted texture used behind auth forms and hero panels. */
+  .k-dots {
+    background-image: radial-gradient(var(--k-dot) 1px, transparent 1px);
+    background-size: 18px 18px;
+  }
+  .k-dots-light {
+    background-image: radial-gradient(rgb(255 255 255 / 0.08) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  /* Data tables share one look everywhere. */
+  .k-table {
+    @apply w-full border-collapse text-left text-[13.5px];
+  }
+  .k-table thead th {
+    @apply border-b border-line bg-surface-muted/60 px-5 py-2.5 text-[11.5px] font-semibold tracking-[0.06em] whitespace-nowrap text-ink-muted uppercase;
+  }
+  .k-table tbody td {
+    @apply border-b border-line px-5 py-3.5 align-middle;
+  }
+  .k-table tbody tr:last-child td {
+    @apply border-b-0;
+  }
+  .k-table tbody tr {
+    @apply transition-colors hover:bg-surface-muted/50;
+  }
+
+  .k-fade-up {
+    animation: k-fade-up 0.35s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+}
+
+@keyframes k-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes k-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+.k-float {
+  animation: k-float 7s ease-in-out infinite;
+}
+.k-float-slow {
+  animation: k-float 9s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {

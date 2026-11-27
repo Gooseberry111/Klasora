@@ -3,4 +3,4 @@
 -- Subscription plans and the permission catalogue are created by migrations,
 -- because production needs them too. Demo schools, staff and students are
 -- added from Phase 3, once student tables exist. All demo data must be
--- fictional — never real children's information.
+-- fictional: never real children's information.

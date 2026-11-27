@@ -10,7 +10,7 @@ import {
 
 const countryCodes = COUNTRIES.map((c) => c.code) as [string, ...string[]];
 
-/** Step 1 — institution information. */
+/** Step 1: institution information. */
 export const institutionStepSchema = z.object({
   name: z
     .string()
@@ -32,13 +32,13 @@ export const institutionStepSchema = z.object({
 });
 export type InstitutionStepInput = z.infer<typeof institutionStepSchema>;
 
-/** Step 2 — academic structure. */
+/** Step 2: academic structure. */
 export const structureStepSchema = z.object({
   academicStructure: z.enum(ACADEMIC_STRUCTURES, { error: 'Choose how your institution is organised.' }),
 });
 export type StructureStepInput = z.infer<typeof structureStepSchema>;
 
-/** Step 3 — the first administrator (the school owner). */
+/** Step 3: the first administrator (the school owner). */
 export const administratorStepSchema = z
   .object({
     firstName: personNameSchema('your first name'),
@@ -54,7 +54,7 @@ export const administratorStepSchema = z
   });
 export type AdministratorStepInput = z.infer<typeof administratorStepSchema>;
 
-/** Step 4 — subscription plan. */
+/** Step 4: subscription plan. */
 export const planStepSchema = z.object({
   planCode: z.string().trim().min(1, { error: 'Choose a plan to continue.' }),
 });

@@ -109,7 +109,7 @@ function permissionLabel(role: RoleSummary) {
 
     <div v-else-if="!error" class="space-y-8">
       <section v-for="group in [
-        { title: 'Built-in roles', hint: 'Created for every school. Only the owner can adjust their permissions.', items: builtIn },
+        { title: 'Standard roles', hint: 'Created for every school. Only the owner can adjust their permissions.', items: builtIn },
         { title: 'Custom roles', hint: 'Roles your school created for its own needs.', items: custom },
       ]" :key="group.title">
         <div class="mb-3">
@@ -123,7 +123,7 @@ function permissionLabel(role: RoleSummary) {
             compact
             :icon="ShieldCheck"
             title="No custom roles yet"
-            description="Create a role such as Exams Officer or Librarian when the built-in roles don't fit."
+            description="Create a role such as Exams Officer or Librarian when the standard roles don't fit."
           >
             <KButton v-if="workspace.can('roles.create')" size="sm" variant="secondary" :icon="Plus" @click="openCreate">
               Create role

@@ -4,7 +4,7 @@ import type { Session, User } from '@supabase/supabase-js';
 import type { Profile, ProfileUpdateInput } from '@klasora/shared';
 import { appUrl, isSupabaseConfigured, supabase } from '@/lib/supabase';
 import { AppError, toAppError } from '@/lib/errors';
-import { fetchProfile, updateProfile as updateProfileRequest } from '@/services/profile';
+import { fetchProfile, saveCompletedTours, updateProfile as updateProfileRequest } from '@/services/profile';
 
 export const useAuthStore = defineStore('auth', () => {
   const session = ref<Session | null>(null);
@@ -141,6 +141,37 @@ export const useAuthStore = defineStore('auth', () => {
     profile.value = await updateProfileRequest(user.value.id, input);
   }
 
+  // Finished walkthroughs live on the profile so they follow the person across
+  // devices. A local copy means a failed save never brings a tour back.
+  const tourKey = () => `klasora.tours.${user.value?.id ?? 'anonymous'}`;
+
+  function localTours(): string[] {
+    try {
+      return JSON.parse(localStorage.getItem(tourKey()) ?? '[]') as string[];
+    } catch {
+      return [];
+    }
+  }
+
+  function hasCompletedTour(id: string): boolean {
+    return Boolean(profile.value?.completed_tours?.includes(id)) || localTours().includes(id);
+  }
+
+  async function completeTour(id: string) {
+    if (!user.value) return;
+    const tours = [...new Set([...(profile.value?.completed_tours ?? []), ...localTours(), id])];
+    try {
+      localStorage.setItem(tourKey(), JSON.stringify(tours));
+    } catch {
+      // Storage can be unavailable in private browsing; the profile still records it.
+    }
+    try {
+      profile.value = await saveCompletedTours(user.value.id, tours);
+    } catch {
+      // Not critical: the local copy prevents the tour from reappearing here.
+    }
+  }
+
   async function signOut() {
     await supabase.auth.signOut();
     session.value = null;
@@ -165,6 +196,8 @@ export const useAuthStore = defineStore('auth', () => {
     refreshSession,
     updateProfile,
     loadProfile,
+    hasCompletedTour,
+    completeTour,
     signOut,
   };
 });

@@ -5,7 +5,7 @@ import KSpinner from './KSpinner.vue';
 
 const props = withDefaults(
   defineProps<{
-    variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'subtle';
+    variant?: 'primary' | 'secondary' | 'ghost' | 'danger' | 'subtle' | 'glass' | 'white';
     size?: 'sm' | 'md' | 'lg';
     type?: 'button' | 'submit' | 'reset';
     loading?: boolean;
@@ -20,11 +20,14 @@ const props = withDefaults(
 );
 
 const variants: Record<string, string> = {
-  primary: 'bg-brand text-white shadow-sm hover:bg-brand-hover disabled:hover:bg-brand',
-  secondary: 'bg-surface text-ink border border-line-strong shadow-sm hover:bg-surface-muted',
+  primary:
+    'k-bg-brand text-white shadow-brand ring-1 ring-inset ring-white/15 hover:brightness-110 hover:-translate-y-px active:translate-y-0 disabled:hover:brightness-100 disabled:hover:translate-y-0',
+  secondary: 'bg-surface text-ink border border-line-strong shadow-card hover:bg-surface-muted',
   ghost: 'text-ink-muted hover:bg-surface-muted hover:text-ink',
   subtle: 'bg-brand-soft text-brand-ink hover:brightness-95',
   danger: 'bg-danger text-white shadow-sm hover:brightness-95',
+  glass: 'bg-white/10 text-white ring-1 ring-inset ring-white/20 backdrop-blur hover:bg-white/15',
+  white: 'bg-white text-[#14243A] shadow-sm hover:bg-[#EFF6FF]',
 };
 
 const sizes: Record<string, string> = {
@@ -35,7 +38,7 @@ const sizes: Record<string, string> = {
 
 const classes = computed(() => [
   'inline-flex select-none items-center justify-center whitespace-nowrap rounded-control font-medium',
-  'transition-colors duration-150 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-focus',
+  'transition-[background-color,filter,transform,box-shadow] duration-150 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-focus',
   'disabled:cursor-not-allowed disabled:opacity-55',
   variants[props.variant],
   sizes[props.size],

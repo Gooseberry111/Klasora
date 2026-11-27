@@ -23,8 +23,11 @@ docs/
 | Phase | Scope | State |
 |---|---|---|
 | 1 · Foundation | Monorepo, Supabase schema, auth, school registration, tenant isolation, RBAC | **Complete** |
-| 2 · School setup | Onboarding, school profile, campuses, academic years, terms, departments, classes, subjects, staff invitations | Next |
-| 3–9 | Users and students, academics, communication, finance, SaaS billing, mobile, production release | Planned |
+| 2 · School setup | Setup guide, school profile and logo, campuses, academic sessions and terms, departments, classes, subjects, staff invitations, guided product tour | **Complete** |
+| 3 · Users and students | Student registration and profiles, health details, guardians and parent portal invitations, class enrolment history, staff profiles, CSV import and export | **Complete** |
+| 4 · Academic operations | Timetables with clash checks, attendance registers and reports, assignments and submissions, student portal, assessments with approval, configurable grading, results, PDF report cards | **Complete** |
+| 5 · Communication | Announcements, messages, notifications | Next |
+| 6 to 9 | Finance, SaaS billing, mobile, production release | Planned |
 
 ## Prerequisites
 
@@ -40,7 +43,7 @@ npm install                          # installs every workspace
 # 1. Link the Supabase project and apply migrations
 npx supabase login
 npx supabase link --project-ref <your-project-ref>
-npx supabase db push                 # applies supabase/migrations in order
+npx supabase db push --remote        # applies supabase/migrations to the linked hosted project
 
 # 2. Configure the apps (public anon key only; never the service-role key)
 cp apps/web/.env.example apps/web/.env.local
@@ -53,6 +56,15 @@ In the Supabase dashboard, open **Authentication → URL configuration** and set
 - Redirect URLs: `http://localhost:5173/**`, `klasora://**`
 
 Also turn on **Confirm email**, and set a minimum password length of 8 that requires letters and digits. These match `supabase/config.jsonc` and the client-side validation. For production email delivery, configure custom SMTP under **Authentication → Emails**.
+
+### Invitation emails (optional)
+
+Staff invitations always produce a link you can copy or share on WhatsApp. To also send them by email, deploy the Edge Function and give it a [Resend](https://resend.com) key:
+
+```bash
+npx supabase functions deploy send-invitation
+npx supabase secrets set RESEND_API_KEY=your_key INVITE_FROM_EMAIL="Klasora <invites@yourdomain.com>" APP_URL=http://localhost:5173
+```
 
 ## Running
 
