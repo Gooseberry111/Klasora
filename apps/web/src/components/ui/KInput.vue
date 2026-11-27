@@ -11,7 +11,7 @@ const model = defineModel<string>({ default: '' });
 const props = withDefaults(
   defineProps<{
     label?: string;
-    type?: 'text' | 'email' | 'password' | 'tel' | 'url' | 'search' | 'date' | 'time' | 'number';
+    type?: 'text' | 'email' | 'password' | 'tel' | 'url' | 'search' | 'date' | 'time' | 'number' | 'datetime-local';
     placeholder?: string;
     hint?: string;
     error?: string;

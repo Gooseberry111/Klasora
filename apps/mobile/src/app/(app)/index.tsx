@@ -10,6 +10,8 @@ import {
   type AcademicTerm,
   type AcademicYear,
   type ChildSummary,
+  type AppNotification,
+  relativeTime,
   RELATIONSHIP_LABELS,
   studentName,
   type SetupProgress,
@@ -45,6 +47,7 @@ export default function HomeScreen() {
   const [years, setYears] = useState<AcademicYear[]>([]);
   const [terms, setTerms] = useState<AcademicTerm[]>([]);
   const [children, setChildren] = useState<ChildSummary[]>([]);
+  const [updates, setUpdates] = useState<AppNotification[]>([]);
   const [photos, setPhotos] = useState<Record<string, string>>({});
 
   const name = profile?.first_name || session?.user.email || 'there';
@@ -57,6 +60,8 @@ export default function HomeScreen() {
       supabase.from('academic_years').select('*').eq('school_id', school.id),
       supabase.from('academic_terms').select('*').eq('school_id', school.id).order('sequence'),
     ]);
+    const recent = await supabase.from('notifications').select('*').order('visible_at', { ascending: false }).limit(5);
+    setUpdates((recent.data ?? []) as AppNotification[]);
     // Guardians see their own children. The call returns nothing for everyone else.
     const kids = await supabase.rpc('get_my_children', { p_school_id: school.id });
     const list = ((kids.data ?? []) as ChildSummary[]);
@@ -197,6 +202,47 @@ export default function HomeScreen() {
                   <Icon name="chevronRight" size={18} color={c.inkSubtle} />
                 </Pressable>
               ))}
+            </>
+          ) : null}
+
+          {currentSchool && updates.length ? (
+            <>
+              <SectionTitle>Recent updates</SectionTitle>
+              <View style={{ backgroundColor: c.surface, borderRadius: radius.panel, borderWidth: StyleSheet.hairlineWidth, borderColor: c.line, overflow: 'hidden' }}>
+                {updates.map((n, i) => (
+                  <Pressable
+                    key={n.id}
+                    accessibilityRole="button"
+                    accessibilityLabel={`${n.read_at ? '' : 'Unread. '}${n.title}`}
+                    onPress={async () => {
+                      if (n.read_at) return;
+                      await supabase.rpc('mark_notifications_read', { p_ids: [n.id] });
+                      setUpdates((list) => list.map((x) => (x.id === n.id ? { ...x, read_at: new Date().toISOString() } : x)));
+                    }}
+                    style={({ pressed }) => ({
+                      flexDirection: 'row',
+                      gap: spacing(3),
+                      padding: spacing(4),
+                      backgroundColor: pressed ? c.surfaceMuted : n.read_at ? 'transparent' : c.brandSoft,
+                      borderBottomWidth: i === updates.length - 1 ? 0 : StyleSheet.hairlineWidth,
+                      borderBottomColor: c.line,
+                    })}
+                  >
+                    <View style={{ width: 8, height: 8, borderRadius: 4, marginTop: 6, backgroundColor: n.read_at ? 'transparent' : c.brand }} />
+                    <View style={{ flex: 1 }}>
+                      <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: spacing(2) }}>
+                        <Text style={{ flex: 1, color: c.ink, fontSize: 14, fontWeight: n.read_at ? '500' : '700' }}>{n.title}</Text>
+                        <Text style={{ color: c.inkSubtle, fontSize: 12 }}>{relativeTime(n.visible_at)}</Text>
+                      </View>
+                      {n.body ? (
+                        <Text numberOfLines={2} style={{ color: c.inkMuted, fontSize: 13, marginTop: 2 }}>
+                          {n.body}
+                        </Text>
+                      ) : null}
+                    </View>
+                  </Pressable>
+                ))}
+              </View>
             </>
           ) : null}
 

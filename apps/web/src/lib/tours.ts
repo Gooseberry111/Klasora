@@ -1,5 +1,8 @@
 import {
   Baby,
+  Bell,
+  Megaphone,
+  MessagesSquare,
   CalendarCheck,
   CalendarClock,
   ClipboardList,
@@ -128,6 +131,20 @@ export function welcomeTourSteps(words: AcademicVocabulary, schoolName: string):
       body: 'Weighted totals and grades on your own grading scale, and report cards to comment on, publish and download as PDF.',
     },
     {
+      target: 'nav-announcements',
+      inSidebar: true,
+      icon: Megaphone,
+      title: 'Announcements',
+      body: 'School news for exactly the right people: everyone, parents of one class, or only staff. You can schedule them and see who has read them.',
+    },
+    {
+      target: 'nav-messages',
+      inSidebar: true,
+      icon: MessagesSquare,
+      title: 'Messages',
+      body: 'Private conversations between parents, teachers and the school office. People can only message those connected to them.',
+    },
+    {
       target: 'nav-section-system',
       inSidebar: true,
       icon: Settings2,
@@ -139,6 +156,12 @@ export function welcomeTourSteps(words: AcademicVocabulary, schoolName: string):
       icon: Rocket,
       title: 'Track your progress',
       body: 'This card shows how much of your setup is done and what to do next. Click any step to jump straight to it.',
+    },
+    {
+      target: 'notification-bell',
+      icon: Bell,
+      title: 'Notifications',
+      body: 'Absences, new assignments, results, messages and announcements arrive here. Choose what reaches your phone or email in Notifications.',
     },
     {
       target: 'theme-toggle',

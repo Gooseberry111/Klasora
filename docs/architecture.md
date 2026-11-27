@@ -127,3 +127,17 @@ Sessions are kept in the device keychain or keystore via `expo-secure-store`. So
 **Grading is configurable.** Each school has its own bands (seeded with A to F); a band applies from its starting score up to the next one, and one band must start at 0. Subject totals are weighted (score divided by maximum, times weight, normalised to 100), absent counts as zero and unentered scores are left out. Class positions are off unless the school turns them on.
 
 **Report cards are snapshots.** `generate_report_cards` stores each student's published subject results, average, grade, optional position and attendance for the term, keeping comments when refreshed. Class teachers write their comment; the principal writes theirs and publishes. The PDF is built in the browser from data the viewer is already allowed to read.
+
+## Phase 5: communication
+
+**One inbox of notifications.** Every alert is a row in `notifications`, written by `app.notify` from triggers (absence when a register is submitted or corrected, assignment published, results published, report card published) and from the announcement and messaging functions. People only read their own rows. `visible_at` lets a scheduled announcement notify at its send time. The web app listens through Realtime and falls back to a one minute poll.
+
+**Delivery is a queue, not a side effect.** `app.notify` also queues push and email rows in `notification_deliveries`, following each person's `notification_preferences` (push for everything and email only for announcements and report cards unless they change it). The `dispatch-notifications` Edge Function sends them in batches through Expo and Resend, retries with growing gaps, and removes phones Expo reports as unregistered. It accepts only the service role key, which never leaves the server.
+
+**Private details stay off lock screens.** Absences, results, report cards and messages are marked sensitive. Unless the person turns on `profiles.push_previews`, their phone only shows the school name and "You have a new update. Open Klasora to see it.", and Android uses a private notification channel.
+
+**Announcements reach exactly their audience.** The audience is everyone, staff, parents, students, chosen classes (with parents, students and teachers of those classes as switches) or chosen roles, optionally limited to one campus. `app.announcement_audience` resolves it to people when the announcement is released, and `announcement_recipients` records who received it and when they read it. People with `announcements.approve` publish anything; teachers publish straight to classes they teach; everything else waits for approval and notifies approvers. Scheduled and expiring announcements are handled by `publish_at` and `expires_at`, so nothing has to run on a timer.
+
+**Messaging only between the right people.** `app.can_message` allows staff with staff, parents with school leaders and their own children's teachers, and students with their own teachers. Parents and students cannot message each other or start groups. People can block someone and report a message. Moderators see only the reported message, never the rest of the conversation. Hiding a message keeps a snapshot for the audit trail and blanks it for everyone, and a conversation can be closed.
+
+**Attachments.** Announcement and message files live in the private `communication-files` bucket, under the school, then the announcement or conversation. `app.communication_file_access` lets recipients and participants read them through signed URLs.

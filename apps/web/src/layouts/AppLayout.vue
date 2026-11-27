@@ -8,6 +8,8 @@ import KAvatar from '@/components/ui/KAvatar.vue';
 import KDropdown from '@/components/ui/KDropdown.vue';
 import KAlert from '@/components/ui/KAlert.vue';
 import KTour from '@/components/tour/KTour.vue';
+import NotificationBell from '@/components/communication/NotificationBell.vue';
+import { useInboxStore } from '@/stores/inbox';
 import WelcomeModal from '@/components/tour/WelcomeModal.vue';
 import { useAuthStore } from '@/stores/auth';
 import { useWorkspaceStore } from '@/stores/workspace';
@@ -20,6 +22,19 @@ const auth = useAuthStore();
 const workspace = useWorkspaceStore();
 const theme = useThemeStore();
 const tour = useTourStore();
+const inbox = useInboxStore();
+
+// Unread counts follow the signed in person and the active school.
+watch(
+  () => [auth.user?.id, workspace.currentSchoolId] as const,
+  ([userId, schoolId]) => {
+    if (userId && schoolId) inbox.start(userId, schoolId);
+    else inbox.stop();
+  },
+  { immediate: true },
+);
+const badgeFor = (routeName: string) =>
+  routeName === 'messages' ? inbox.unreadMessages : routeName === 'announcements' ? inbox.unreadAnnouncements : 0;
 const route = useRoute();
 const router = useRouter();
 
@@ -200,6 +215,13 @@ watch(
                   aria-hidden="true"
                 />
                 {{ item.label }}
+                <span
+                  v-if="badgeFor(item.routeName)"
+                  class="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-[#3B82F6] px-1.5 text-[11px] font-bold text-white"
+                  :aria-label="`${badgeFor(item.routeName)} unread`"
+                >
+                  {{ badgeFor(item.routeName) > 99 ? '99+' : badgeFor(item.routeName) }}
+                </span>
               </RouterLink>
             </li>
           </ul>
@@ -234,6 +256,7 @@ watch(
         </p>
 
         <div class="ml-auto flex items-center gap-1">
+          <NotificationBell :slug="slug" />
           <button
             type="button"
             data-tour="help-button"

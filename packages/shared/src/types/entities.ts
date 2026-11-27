@@ -36,6 +36,8 @@ export interface Profile {
   theme: ThemePreference;
   /** Product tours this person has finished, such as 'web_welcome_v1'. */
   completed_tours: string[];
+  /** Show message and result details in push notifications on the lock screen. */
+  push_previews: boolean;
   created_at: Timestamp;
   updated_at: Timestamp;
 }

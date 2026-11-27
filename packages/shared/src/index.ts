@@ -12,5 +12,6 @@ export * from './people';
 export * from './csv';
 export * from './schemas/students';
 export * from './academics';
+export * from './communication';
 export type * from './types/entities';
 export * from './errors';

@@ -10,6 +10,7 @@ import {
   type Profile,
 } from '@klasora/shared';
 import { supabase } from '@/lib/supabase';
+import { registerForPush } from '@/lib/push';
 
 export interface MobileSchool {
   id: string;
@@ -82,6 +83,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       ]);
       if (membershipRes.error) throw toAppError(membershipRes.error, { fallback: "We couldn't load your schools." });
       setProfile((profileRes.data as Profile | null) ?? null);
+      // Register this phone for push notifications (does nothing if not possible).
+      void registerForPush();
       await loadLocalTours(userId);
 
       const bySchool = new Map<string, MobileSchool>();

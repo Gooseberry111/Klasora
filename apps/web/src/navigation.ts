@@ -1,6 +1,9 @@
 import type { Component } from 'vue';
 import {
   Baby,
+  Bell,
+  Megaphone,
+  MessagesSquare,
   CalendarCheck,
   CalendarClock,
   ClipboardList,
@@ -98,6 +101,15 @@ export const NAVIGATION: NavSection[] = [
         anyOf: ['academics.view'],
       },
       { label: 'Subjects', vocab: (w) => w.subjects, routeName: 'subjects', icon: BookOpen, anyOf: ['academics.view'] },
+    ],
+  },
+  {
+    id: 'communication',
+    heading: 'Communication',
+    items: [
+      { label: 'Announcements', routeName: 'announcements', icon: Megaphone },
+      { label: 'Messages', routeName: 'messages', icon: MessagesSquare },
+      { label: 'Notifications', routeName: 'notifications', icon: Bell },
     ],
   },
   {

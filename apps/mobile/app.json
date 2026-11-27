@@ -31,10 +31,27 @@
         {
           "configureAndroidBackup": true
         }
+      ],
+      [
+        "expo-notifications",
+        {
+          "color": "#2563EB"
+        }
       ]
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "asyncRoutes": {
+          "web": true
+        }
+      },
+      "eas": {
+        "projectId": "19d755df-357b-4d7c-a898-53a4030a84f8"
+      }
+    },
+    "owner": "gooseberry111"
   }
 }

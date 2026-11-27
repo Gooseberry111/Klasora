@@ -26,8 +26,9 @@ docs/
 | 2 · School setup | Setup guide, school profile and logo, campuses, academic sessions and terms, departments, classes, subjects, staff invitations, guided product tour | **Complete** |
 | 3 · Users and students | Student registration and profiles, health details, guardians and parent portal invitations, class enrolment history, staff profiles, CSV import and export | **Complete** |
 | 4 · Academic operations | Timetables with clash checks, attendance registers and reports, assignments and submissions, student portal, assessments with approval, configurable grading, results, PDF report cards | **Complete** |
-| 5 · Communication | Announcements, messages, notifications | Next |
-| 6 to 9 | Finance, SaaS billing, mobile, production release | Planned |
+| 5 · Communication | Targeted announcements with approval and read tracking, safe parent and teacher messaging with reporting and moderation, in app, push and email notifications with per person preferences | **Complete** |
+| 6 · Finance | Fees, invoices, payments, receipts | Next |
+| 7 to 9 | SaaS billing, mobile, production release | Planned |
 
 ## Prerequisites
 
@@ -65,6 +66,36 @@ Staff invitations always produce a link you can copy or share on WhatsApp. To al
 npx supabase functions deploy send-invitation
 npx supabase secrets set RESEND_API_KEY=your_key INVITE_FROM_EMAIL="Klasora <invites@yourdomain.com>" APP_URL=http://localhost:5173
 ```
+
+### Push and email notifications (optional)
+
+Notifications always appear inside Klasora. Push and email copies are queued in `notification_deliveries` and sent by the `dispatch-notifications` Edge Function, which uses the same Resend secrets as invitations. It only accepts calls carrying the project's service role key, so deploy it without the default JWT check:
+
+```bash
+npx supabase functions deploy dispatch-notifications --no-verify-jwt
+```
+
+Then run it every minute. In the Supabase dashboard, enable the `pg_cron` and `pg_net` extensions, and run this once in the SQL editor (it keeps the key in Vault rather than in the job text):
+
+```sql
+select vault.create_secret('https://YOUR_PROJECT_REF.supabase.co', 'project_url');
+select vault.create_secret('YOUR_SERVICE_ROLE_KEY', 'service_role_key');
+
+select cron.schedule('dispatch-notifications', '* * * * *', $$
+  select net.http_post(
+    url := (select decrypted_secret from vault.decrypted_secrets where name = 'project_url') || '/functions/v1/dispatch-notifications',
+    headers := jsonb_build_object(
+      'Content-Type', 'application/json',
+      'Authorization', 'Bearer ' || (select decrypted_secret from vault.decrypted_secrets where name = 'service_role_key')
+    ),
+    body := '{}'::jsonb
+  );
+$$);
+```
+
+Use the legacy JWT `service_role` key (Project Settings, API keys), since that is the value Supabase gives the function as `SUPABASE_SERVICE_ROLE_KEY`. Failed sends retry with growing gaps, up to 5 attempts, and phones that uninstalled the app are removed automatically.
+
+Push to phones also needs the mobile app linked to an EAS project, because Expo push tokens are issued per project. Run `npx eas init` in `apps/mobile` once; until then the app simply skips push registration.
 
 ## Running
 
