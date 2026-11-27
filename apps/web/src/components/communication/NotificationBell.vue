@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref } from 'vue';
 import { RouterLink, useRouter } from 'vue-router';
-import { Bell, BellRing, CalendarX, CheckCheck, FileText, Megaphone, MessageCircle, NotebookPen, Trophy } from 'lucide-vue-next';
+import { Bell, BellRing, CalendarX, CheckCheck, FileText, Megaphone, MessageCircle, NotebookPen, Trophy, Wallet } from 'lucide-vue-next';
 import { relativeTime, type AppNotification, type NotificationKind } from '@klasora/shared';
 import { useInboxStore } from '@/stores/inbox';
 import { markNotificationsRead } from '@/services/communication';
@@ -20,6 +20,7 @@ const ICONS: Record<NotificationKind, typeof Bell> = {
   assignment: NotebookPen,
   result: Trophy,
   report_card: FileText,
+  fees: Wallet,
   general: BellRing,
 };
 const TONES: Record<NotificationKind, string> = {
@@ -29,6 +30,7 @@ const TONES: Record<NotificationKind, string> = {
   assignment: 'bg-info-soft text-info-ink',
   result: 'bg-success-soft text-success-ink',
   report_card: 'bg-success-soft text-success-ink',
+  fees: 'bg-warning-soft text-warning-ink',
   general: 'bg-surface-muted text-ink-muted',
 };
 

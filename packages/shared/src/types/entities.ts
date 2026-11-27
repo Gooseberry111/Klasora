@@ -61,6 +61,8 @@ export interface School {
   default_currency: string;
   status: SchoolStatus;
   motto: string | null;
+  /** Bank details and bursary hours shown to families on their Fees page. */
+  payment_instructions?: string | null;
   setup_completed_at: Timestamp | null;
   created_by: Uuid | null;
   created_at: Timestamp;

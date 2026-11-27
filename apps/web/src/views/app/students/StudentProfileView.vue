@@ -27,6 +27,7 @@ import {
   KeyRound,
   NotebookPen,
   Trophy,
+  Wallet,
 } from 'lucide-vue-next';
 import {
   BLOOD_GROUPS,
@@ -69,6 +70,7 @@ import KIconTile from '@/components/ui/KIconTile.vue';
 import GuardianLinkModal from '@/components/students/GuardianLinkModal.vue';
 import InvitationShare from '@/components/InvitationShare.vue';
 import StudentAcademicTab from '@/components/students/StudentAcademicTab.vue';
+import StudentFinanceTab from '@/components/finance/StudentFinanceTab.vue';
 import { inviteStudent } from '@/services/academics';
 import { appUrl } from '@/lib/supabase';
 import { formatDate } from '@/lib/time';
@@ -185,6 +187,7 @@ const tabs = computed(() => [
   ...(can('attendance.view') || isFamily.value ? [{ key: 'attendance', label: 'Attendance', icon: CalendarCheck }] : []),
   ...(can('assignments.view') || isFamily.value ? [{ key: 'assignments', label: 'Assignments', icon: NotebookPen }] : []),
   ...(can('examinations.view') || isFamily.value ? [{ key: 'results', label: 'Results', icon: Trophy }] : []),
+  ...(can('finance.view') || isGuardianView.value ? [{ key: 'finance', label: 'Fees', icon: Wallet }] : []),
   ...(canSeeHealth.value ? [{ key: 'health', label: 'Health and welfare', icon: HeartPulse }] : []),
   ...(can('students.view') || isGuardianView.value ? [{ key: 'documents', label: 'Documents', icon: FolderOpen }] : []),
   ...(can('audit.view') ? [{ key: 'activity', label: 'Activity', icon: ShieldCheck }] : []),
@@ -622,6 +625,15 @@ function describe(entry: ActivityEntry): string {
         :kind="tab"
         :student-id="student.id"
         :class-id="current?.class_id ?? (isSelf ? (workspace.myStudent?.class_id ?? null) : null)"
+      />
+
+      <!-- Fees -->
+      <StudentFinanceTab
+        v-else-if="tab === 'finance'"
+        :student-id="student.id"
+        :student-name="studentName(student, true)"
+        :admission-number="student.admission_number"
+        :class-name="currentClassName ?? ''"
       />
 
       <!-- Health -->

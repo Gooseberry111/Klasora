@@ -95,6 +95,15 @@ describe('navigation', () => {
     const withRoles = visibleNavigation((p) => p === 'roles.view').flatMap((s) => s.items.map((i) => i.routeName));
     expect(withRoles).toContain('roles');
   });
+
+  it('shows finance to finance staff and the Fees page only to guardians', () => {
+    const finance = visibleNavigation((p) => p === 'finance.view').flatMap((s) => s.items.map((i) => i.routeName));
+    expect(finance).toEqual(expect.arrayContaining(['fee-structures', 'invoices', 'payments', 'finance']));
+    expect(finance).not.toContain('fees');
+    const parent = visibleNavigation(() => false, undefined, undefined, { isGuardian: true }).flatMap((s) => s.items.map((i) => i.routeName));
+    expect(parent).toContain('fees');
+    expect(parent).not.toContain('invoices');
+  });
 });
 
 describe('plan presentation', () => {

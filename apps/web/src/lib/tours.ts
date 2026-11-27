@@ -20,6 +20,7 @@ import {
   Settings2,
   UserRound,
   Users,
+  Wallet,
 } from 'lucide-vue-next';
 import type { AcademicVocabulary } from '@klasora/shared';
 import type { TourStep } from '@/stores/tour';
@@ -143,6 +144,20 @@ export function welcomeTourSteps(words: AcademicVocabulary, schoolName: string):
       icon: MessagesSquare,
       title: 'Messages',
       body: 'Private conversations between parents, teachers and the school office. People can only message those connected to them.',
+    },
+    {
+      target: 'nav-section-finance',
+      inSidebar: true,
+      icon: Wallet,
+      title: 'Finance',
+      body: 'Set your fees once, bill every class in a few clicks, record cash and bank transfers, and see who still owes. Families get invoices and receipts in their portal.',
+    },
+    {
+      target: 'nav-fees',
+      inSidebar: true,
+      icon: Wallet,
+      title: 'Fees',
+      body: 'Invoices from the school, what you have paid and what is still owed, with receipts you can download.',
     },
     {
       target: 'nav-section-system',

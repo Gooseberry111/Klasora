@@ -13,5 +13,6 @@ export * from './csv';
 export * from './schemas/students';
 export * from './academics';
 export * from './communication';
+export * from './finance';
 export type * from './types/entities';
 export * from './errors';

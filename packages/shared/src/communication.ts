@@ -4,7 +4,7 @@ import { z } from 'zod';
 type Uuid = string;
 type Timestamp = string;
 
-export const NOTIFICATION_KINDS = ['announcement', 'message', 'absence', 'assignment', 'result', 'report_card', 'general'] as const;
+export const NOTIFICATION_KINDS = ['announcement', 'message', 'absence', 'assignment', 'result', 'report_card', 'fees', 'general'] as const;
 export type NotificationKind = (typeof NOTIFICATION_KINDS)[number];
 
 export const NOTIFICATION_KIND_LABELS: Record<NotificationKind, { label: string; description: string }> = {
@@ -14,12 +14,13 @@ export const NOTIFICATION_KIND_LABELS: Record<NotificationKind, { label: string;
   assignment: { label: 'Assignments', description: 'When new homework or projects are set.' },
   result: { label: 'Results', description: 'When results are published.' },
   report_card: { label: 'Report cards', description: 'When a report card is ready.' },
+  fees: { label: 'Fees and payments', description: 'New invoices and payment receipts.' },
   general: { label: 'School updates', description: 'Approvals, reports and other updates.' },
 };
 
-/** Defaults when a person has not chosen: push for everything, email for announcements and report cards. */
+/** Defaults when a person has not chosen: push for everything, email for announcements, report cards and fees. */
 export function defaultChannels(kind: NotificationKind) {
-  return { push: true, email: kind === 'announcement' || kind === 'report_card' };
+  return { push: true, email: kind === 'announcement' || kind === 'report_card' || kind === 'fees' };
 }
 
 export interface AppNotification {

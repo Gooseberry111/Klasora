@@ -51,6 +51,7 @@ import { fetchSetupProgress, listAcademicYears, listTerms } from '@/services/set
 import { fetchPeopleCounts, signedPhotoUrls } from '@/services/students';
 import { attendanceReport } from '@/services/academics';
 import TodayCard from '@/components/academics/TodayCard.vue';
+import FeesSummaryCard from '@/components/finance/FeesSummaryCard.vue';
 import { greetingFor } from '@/lib/time';
 import { formatDay, useSchool } from '@/composables/useSchool';
 
@@ -432,6 +433,7 @@ const contact = computed(() => {
 
       <div class="space-y-6">
       <TodayCard />
+      <FeesSummaryCard :year-id="currentYear?.id ?? null" />
       <!-- Current term -->
       <KCard :icon="CalendarDays" tone="violet" :title="currentTerm ? currentTerm.name : `Current ${words.period.toLowerCase()}`">
         <KSkeleton v-if="loading" :lines="3" />

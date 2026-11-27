@@ -141,3 +141,19 @@ Sessions are kept in the device keychain or keystore via `expo-secure-store`. So
 **Messaging only between the right people.** `app.can_message` allows staff with staff, parents with school leaders and their own children's teachers, and students with their own teachers. Parents and students cannot message each other or start groups. People can block someone and report a message. Moderators see only the reported message, never the rest of the conversation. Hiding a message keeps a snapshot for the audit trail and blanks it for everyone, and a conversation can be closed.
 
 **Attachments.** Announcement and message files live in the private `communication-files` bucket, under the school, then the announcement or conversation. `app.communication_file_access` lets recipients and participants read them through signed URLs.
+
+## Phase 6: finance
+
+**Money never passes through the browser as a total.** Invoices, invoice lines, payments and allocations have no insert, update or delete grants. Every change goes through a database function that checks the permission, writes the rows and recalculates the invoice with `app.refresh_invoice`. Amounts are kobo in `bigint` columns; `balance` is a generated column, and a check constraint stops an invoice from ever showing more paid than it costs.
+
+**Fee structures drive invoices.** A fee belongs to an academic session, optionally one term, and applies to every student, one class or one section. Frequency decides repeats: every term, once a session, or once ever (registration). Optional fees (bus, boarding) are added only to the students who take them. `generate_invoices` bills every active student in the chosen classes, skips anyone who already has an invoice for the term, and has a dry run mode that the app shows as a preview. A per school advisory lock stops two people generating at once.
+
+**Drafts, issuing and changes.** Generated invoices can start as drafts that families cannot see. Issuing notifies guardians whose link allows finances. Drafts are edited freely with `finance.edit`; once issued, adding a discount or removing a line needs `finance.approve` and a reason, which is stored on the line or in the audit log. Cancelling needs `finance.delete`, a reason, and no active payments on the invoice. Numbers are `INV/2026/00001` and `RCT/2026/00001`, per school and year.
+
+**Manual payments are approved before they count.** A payment recorded by someone with `finance.approve` is confirmed straight away; anyone else's waits as pending and approvers are notified. Only confirmed payments count towards `amount_paid`, and only they get a receipt number. Transfers, POS and cheques need a reference, and the same reference cannot be recorded twice while it stands. A bounced cheque is reversed, which reopens the invoices it paid. Every manual payment is marked `payment_provider = 'manual'`.
+
+**Allocation.** A payment is split across the student's open invoices, oldest due date first, unless specific amounts are given. Allocations never exceed what is still open on an invoice, counting payments that are still pending. Anything left over is credit, which can be applied to later invoices.
+
+**Ready for online payments.** `payments.payment_provider` and `payment_reference` are unique per provider for anything other than manual records, so a verified webhook delivered twice cannot record the same payment twice. Online payments will be confirmed only by a verified provider callback.
+
+**Who sees what.** Fee structures, all invoices and all payments need `finance.view`. Guardians see their own children's issued invoices and confirmed or reversed payments, and only when `student_guardians.can_view_finances` is on. Reports (`finance_summary`, `student_balances`) are finance staff only. Invoice and receipt PDFs are built in the browser; jsPDF's fonts have no naira sign, so PDFs print `NGN 150,000.00`.

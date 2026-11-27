@@ -1,6 +1,10 @@
 import type { Component } from 'vue';
 import {
   Baby,
+  ChartColumnBig,
+  FileText,
+  Tags,
+  Wallet,
   Bell,
   Megaphone,
   MessagesSquare,
@@ -63,6 +67,7 @@ export const NAVIGATION: NavSection[] = [
     items: [
       { label: 'Dashboard', routeName: 'dashboard', icon: LayoutDashboard },
       { label: 'My children', routeName: 'children', icon: Baby, guardiansOnly: true },
+      { label: 'Fees', routeName: 'fees', icon: Wallet, guardiansOnly: true },
       { label: 'My results', routeName: 'my-results', icon: Trophy, alsoFor: ['student'], anyOf: [] },
       {
         label: 'Setup guide',
@@ -110,6 +115,16 @@ export const NAVIGATION: NavSection[] = [
       { label: 'Announcements', routeName: 'announcements', icon: Megaphone },
       { label: 'Messages', routeName: 'messages', icon: MessagesSquare },
       { label: 'Notifications', routeName: 'notifications', icon: Bell },
+    ],
+  },
+  {
+    id: 'finance',
+    heading: 'Finance',
+    items: [
+      { label: 'Fee structures', routeName: 'fee-structures', icon: Tags, anyOf: ['finance.view'] },
+      { label: 'Invoices', routeName: 'invoices', icon: FileText, anyOf: ['finance.view'] },
+      { label: 'Payments', routeName: 'payments', icon: Wallet, anyOf: ['finance.view'] },
+      { label: 'Financial reports', routeName: 'finance', icon: ChartColumnBig, anyOf: ['finance.view'] },
     ],
   },
   {

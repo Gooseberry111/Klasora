@@ -27,8 +27,9 @@ docs/
 | 3 · Users and students | Student registration and profiles, health details, guardians and parent portal invitations, class enrolment history, staff profiles, CSV import and export | **Complete** |
 | 4 · Academic operations | Timetables with clash checks, attendance registers and reports, assignments and submissions, student portal, assessments with approval, configurable grading, results, PDF report cards | **Complete** |
 | 5 · Communication | Targeted announcements with approval and read tracking, safe parent and teacher messaging with reporting and moderation, in app, push and email notifications with per person preferences | **Complete** |
-| 6 · Finance | Fees, invoices, payments, receipts | Next |
-| 7 to 9 | SaaS billing, mobile, production release | Planned |
+| 6 · Finance | Fee structures, invoice generation with discounts, manual payments (cash, transfer, POS, cheque) with approval and allocation, PDF invoices and receipts, financial reports, parent Fees page | **Complete** |
+| 7 · SaaS billing | Klasora subscriptions and Paystack | Next |
+| 8 to 9 | Mobile, production release | Planned |
 
 ## Prerequisites
 
